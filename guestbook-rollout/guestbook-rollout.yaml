@@ -81,6 +81,7 @@ spec:
           # image: gcr.io/heptio-images/ks-guestbook-demo:0.2
           ports:
             - containerPort: 3071
+              protocol: tcp
           resources:
             requests:
               memory: 32Mi
