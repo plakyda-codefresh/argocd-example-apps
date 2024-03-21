@@ -80,7 +80,7 @@ spec:
           image: xeonalex/guesbook:0.3
           # image: gcr.io/heptio-images/ks-guestbook-demo:0.2
           ports:
-            - containerPort: 3070
+            - containerPort: 3071
           resources:
             requests:
               memory: 32Mi
