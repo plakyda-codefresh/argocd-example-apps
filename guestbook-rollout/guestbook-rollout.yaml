@@ -1,0 +1,87 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: '1'
+  name: mars-rollout2
+  labels:
+    testLabel: 'newvalue'
+spec:
+  progressDeadlineSeconds: 100
+  replicas: 1
+  revisionHistoryLimit: 1
+  strategy:
+    canary:
+      analysis:
+        templates:
+          - templateName: background
+      steps:
+        # - setWeight: 10
+        # - analysis:
+        #     templates:
+        #     - templateName: star-w-template-3-inconclusive
+        - setWeight: 50
+        # - pause: { }
+        # - analysis:
+        #     args:
+        #       - name: namespace.prod.guse4.mgmt
+        #         value: pipeline-prod-test-mgmt
+        #       - name: currentStepIndex
+        #         valueFrom:
+        #           fieldRef:
+        #             fieldPath: status.currentStepIndex
+        #     dryRun:
+        #       - metricName: .*
+        #     templates:
+        #       - clusterScope: true
+        #         templateName: wait-for.prod.guse4.mgmt
+        # - analysis:
+        #     args:
+        #       - name: namespace.prod.guse4.mgmt
+        #         value: pipeline-prod-test-mgmt
+        #       - name: currentStepIndex
+        #         valueFrom:
+        #           fieldRef:
+        #             fieldPath: status.currentStepIndex
+        #     dryRun:
+        #       - metricName: .*
+        #     templates:
+        #       - clusterScope: true
+        #         templateName: wait-for.prod.guse4.mgmt
+        - pause: {duration: 10}
+        - analysis:
+            templates:
+            - templateName: star-w-template-1
+        - pause: {duration: 20}
+        - analysis:
+            templates:
+            - templateName: star-w-template-1
+        # - analysis:
+        #     args:
+        #       - name: verificationStatusMetric
+        #         value: passedVal
+        #       - name: verificationStatusMetric2
+        #         valueFrom:
+        #           fieldRef:
+        #             fieldPath: metadata.labels['testLabel']
+        #     templates:
+        #     - templateName: star-w-template-var-metric
+        # - pause: {duration: 15}
+  selector:
+    matchLabels:
+      app: express-microservice2
+  template:
+    metadata:
+      labels:
+        app: express-microservice2
+    spec:
+      containers:
+        - name: express-microservice2
+          image: xeonalex/guesbook:0.3
+          # image: gcr.io/heptio-images/ks-guestbook-demo:0.2
+          ports:
+            - containerPort: 3070
+          resources:
+            requests:
+              memory: 32Mi
+              cpu: 5m
