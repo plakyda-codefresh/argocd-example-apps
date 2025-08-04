@@ -48,11 +48,11 @@ spec:
         #     templates:
         #       - clusterScope: true
         #         templateName: wait-for.prod.guse4.mgmt
-        - pause: {duration: 10}
+        - pause: {duration: 1000}
         - analysis:
             templates:
             - templateName: star-w-template-1
-        - pause: {duration: 10}
+        - pause: {duration: 1000}
         - analysis:
             templates:
             - templateName: star-w-template-1
@@ -77,8 +77,8 @@ spec:
     spec:
       containers:
         - name: express-microservice2
-          image: xeonalex/guesbook:0.2
-          # image: gcr.io/heptio-images/ks-guestbook-demo:0.2
+          # image: xeonalex/guesbook:0.2
+          image: gcr.io/heptio-images/ks-guestbook-demo:0.2
           ports:
             - containerPort: 3071
               protocol: TCP
