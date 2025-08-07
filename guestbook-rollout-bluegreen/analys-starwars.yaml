@@ -1,0 +1,106 @@
+---
+kind: AnalysisTemplate
+apiVersion: argoproj.io/v1alpha1
+metadata:
+  name: star-w-template-1-bluegreen
+spec:
+  metrics:
+  - name: starw-api-1
+    count: '2'
+    interval: 5s
+    failureLimit: 1
+    successCondition: result == '172'
+    provider:
+      web:
+        url: https://swapi.py4e.com/api/people/1
+        timeoutSeconds: 20 # defaults to 10 seconds
+        jsonPath: "{$.height}"
+---
+
+---
+kind: AnalysisTemplate
+apiVersion: argoproj.io/v1alpha1
+metadata:
+  name: star-w-template-15-bluegreen
+spec:
+  metrics:
+  - name: starw-api-2
+    count: 15
+    interval: 5s
+    successCondition: result == '172'
+    # failureCondition: result != '2'
+    failureLimit: 5
+    provider:
+      web:
+        url: https://swapi.dev/api/people/1
+        timeoutSeconds: 20 # defaults to 10 seconds
+        jsonPath: "{$.height}"
+---
+kind: AnalysisTemplate
+apiVersion: argoproj.io/v1alpha1
+metadata:
+  name: star-w-template-var-metric-bluegreen
+spec:
+  args:
+    - name: verificationStatusMetric
+      value: test
+    - name: verificationStatusMetric2
+      value: test2
+  metrics:
+  - name: '{{args.verificationStatusMetric}}-0-{{args.verificationStatusMetric2}}'
+    count: 5
+    interval: 5s
+    successCondition: result == '172'
+    # failureCondition: result != '2'
+    failureLimit: 5
+    provider:
+      web:
+        url: https://swapi.dev/api/people/1
+        timeoutSeconds: 20 # defaults to 10 seconds
+        jsonPath: "{$.height}"
+
+---
+kind: AnalysisTemplate
+apiVersion: argoproj.io/v1alpha1
+metadata:
+  name: star-w-template-3-inconclusive-bluegreen
+spec:
+  metrics:
+  - name: starw-api-2
+    count: 2
+    interval: 5s
+    initialDelay: 5s
+    inconclusiveLimit: 1
+    consecutiveErrorLimit: 3
+    failureCondition: result == '170'
+    successCondition: result == '175'
+    failureLimit: 2
+    provider:
+      web:
+        url: https://swapi.dev/api/people/1
+        timeoutSeconds: 20 # defaults to 10 seconds
+        jsonPath: "{$.height}"
+
+---
+kind: AnalysisTemplate
+apiVersion: argoproj.io/v1alpha1
+metadata:
+  name: background-bluegreen
+spec:
+  metrics:
+  - name: pass-always
+    count: 2
+    interval: 5s
+    failureLimit: 1
+    provider:
+      job:
+        spec:
+          template:
+            spec:
+              containers:
+              - name: sleep
+                image: alpine:3.8
+                command: [sh, -c]
+                args: [exit 0]
+              restartPolicy: Never
+          backoffLimit: 0

@@ -1,0 +1,43 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: '1'
+  name: mars-rollout2
+  labels:
+    testLabel: 'newvalue'
+spec:
+  progressDeadlineSeconds: 100
+  replicas: 1
+  revisionHistoryLimit: 1
+  strategy:
+    blueGreen:
+      activeService: mars-rollout2-active
+      previewService: mars-rollout2-preview
+      autoPromotionEnabled: false
+      autoPromotionSeconds: 30
+      previewReplicaCount: 1
+      prePromotionAnalysis:
+        templates:
+          - templateName: star-w-template-1-bluegreen
+      postPromotionAnalysis:
+        templates:
+          - templateName: star-w-template-1-bluegreen
+  selector:
+    matchLabels:
+      app: express-microservice2-bluegreen
+  template:
+    metadata:
+      labels:
+        app: express-microservice2-bluegreen
+    spec:
+      containers:
+        - name: express-microservice2-bluegreen
+          image: nginxdemos/hello
+          ports:
+            - containerPort: 3071
+              protocol: TCP
+          resources:
+            requests:
+              memory: 32Mi
+              cpu: 5m
