@@ -78,7 +78,7 @@ spec:
       containers:
         - name: express-microservice2
           # image: xeonalex/guesbook:0.2
-          image: gcr.io/heptio-images/ks-guestbook-demo:0.2
+          image: gcr.io/heptio-images/ks-guestbook-demo:0.1
           ports:
             - containerPort: 3071
               protocol: TCP
