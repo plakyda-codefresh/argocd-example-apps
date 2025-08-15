@@ -48,11 +48,11 @@ spec:
         #     templates:
         #       - clusterScope: true
         #         templateName: wait-for.prod.guse4.mgmt
-        - pause: {duration: 1000}
+        - pause: {duration: 10}
         - analysis:
             templates:
             - templateName: star-w-template-1
-        - pause: {duration: 1000}
+        - pause: {duration: 10}
         - analysis:
             templates:
             - templateName: star-w-template-1
@@ -78,8 +78,8 @@ spec:
       containers:
         - name: express-microservice2
           # image: xeonalex/guesbook:0.2
-          image: nginxdemos/hello
-          # image: hashicorp/http-echo
+          # image: nginxdemos/hello
+          image: hashicorp/http-echo
           ports:
             - containerPort: 3071
               protocol: TCP
