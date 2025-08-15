@@ -104,3 +104,19 @@ spec:
                 args: [exit 0]
               restartPolicy: Never
           backoffLimit: 0
+  - name: pass-always-2
+    count: 2
+    interval: 5s
+    failureLimit: 1
+    provider:
+      job:
+        spec:
+          template:
+            spec:
+              containers:
+              - name: sleep
+                image: alpine:3.8
+                command: [sh, -c]
+                args: [exit 0]
+              restartPolicy: Never
+          backoffLimit: 0
