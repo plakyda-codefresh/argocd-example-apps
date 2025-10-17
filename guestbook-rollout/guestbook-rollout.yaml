@@ -8,7 +8,7 @@ metadata:
     testLabel: 'newvalue'
 spec:
   progressDeadlineSeconds: 100
-  replicas: 1
+  replicas: 2
   revisionHistoryLimit: 1
   strategy:
     canary:
